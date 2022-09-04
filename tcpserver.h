@@ -14,6 +14,7 @@ public:
 
 private:
     QTcpSocket* socket;
+    QString host;
 };
 
 #endif // TCPSERVER_H

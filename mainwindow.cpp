@@ -26,11 +26,21 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::correct(QString& str) {
+    str.remove(QChar('('));
+    str.remove(QChar(')'));
+    str.replace(QString("'"), QString(""));
+    str.remove(QChar('"'));
+}
+
 void MainWindow::refreshProfile() {
-    QString profile_login = server->sendData("SELECT login FROM users WHERE id = " + QString::number(id) + ";");
-    QString profile_name = server->sendData("SELECT name FROM users WHERE id = " + QString::number(id) + ";");
-    QString profile_surname = server->sendData("SELECT surname FROM users WHERE id = " + QString::number(id) + ";");
-    QString profile_status = server->sendData("SELECT status FROM users WHERE id = " + QString::number(id) + ";");
+    QString data = server->sendData("SELECT login, name, surname, status FROM users WHERE id = " + QString::number(id) + ";");
+    correct(data);
+
+    QString profile_login = data.section(',', 0, 0);
+    QString profile_name = data.section(',', 1, 1);
+    QString profile_surname = data.section(',', 2, 2);
+    QString profile_status = data.section(',', 3, 3);
 
     ui->ProfileLoginLineEdit->setText(profile_login);
     ui->ProfileFirstNameLineEdit->setText(profile_name);
@@ -39,11 +49,11 @@ void MainWindow::refreshProfile() {
 }
 
 void MainWindow::clickProfileApplyButton() {
-    server->sendData("UPDATE users SET login = " + ui->ProfileLoginLineEdit->text()
-                     + ", name = " + ui->ProfileFirstNameLineEdit->text()
-                     + ", surname = " + ui->ProfileLastNameLineEdit->text()
-                     + ", status = " + ui->ProfileStatusTextEdit->toPlainText()
-                     + " WHERE id = " + QString::number(id));
+    server->sendData("UPDATE users SET login = '" + ui->ProfileLoginLineEdit->text()
+                     + "', name = '" + ui->ProfileFirstNameLineEdit->text()
+                     + "', surname = '" + ui->ProfileLastNameLineEdit->text()
+                     + "', status = '" + ui->ProfileStatusTextEdit->toPlainText()
+                     + "' WHERE id = " + QString::number(id));
     refreshProfile();
     ui->SuccessLabel->setText("Applied!");
 }

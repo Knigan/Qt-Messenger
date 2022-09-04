@@ -18,6 +18,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void refreshProfile();
+    void correct(QString&);
 
 private slots:
     void clickProfileApplyButton();

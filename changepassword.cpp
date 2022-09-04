@@ -37,7 +37,7 @@ void ChangePassword::clickApplyButton() {
         }
         else {
             server->sendData("UPDATE users SET password = '" + ui->NewPasswordLineEdit->text()
-                             + " WHERE id = " + QString::number(id));
+                             + "' WHERE id = " + QString::number(id));
             close();
         }
     }

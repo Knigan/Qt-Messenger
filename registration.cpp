@@ -31,13 +31,13 @@ void Registration::clickSignUpButton() {
     else {
         QString check = server->sendData("SELECT id FROM users WHERE login = '" + ui->LoginLineEdit->text() + "';");
         if (check == "The request was completed successfully") {
-            ui->ErrorLabel->setText("The entered login is already used");
-        }
-        else {
             int count = server->sendData("SELECT COUNT(*) FROM users;").toInt();
             server->sendData("INSERT INTO users VALUES (" + QString::number(count + 1) + ", '" + ui->LoginLineEdit->text() + "', '"
                              + ui->PasswordLineEdit->text() + "', '" + ui->FirstNameLineEdit->text() + "', '" + ui->LastNameLineEdit->text() + "', '');");
             close();
+        }
+        else {
+            ui->ErrorLabel->setText("The entered login is already used");
         }
     }
 }
