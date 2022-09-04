@@ -28,6 +28,21 @@ ChangePassword::~ChangePassword()
 
 void ChangePassword::clickApplyButton() {
     QString password = server->sendData("SELECT password FROM users WHERE id = " + QString::number(id));
+    auto correct = [](QString& str) {
+        str.remove(QChar('('));
+        str.remove(QChar(')'));
+        str.replace(QString("'"), QString(""));
+        str.remove(QChar('"'));
+        str.remove(QChar(','));
+
+        while (str[0] == ' ') {
+            str.remove(0, 1);
+        }
+        while (str[str.length() - 1] == ' ') {
+            str.remove(str.length() - 1, 1);
+        }
+    };
+    correct(password);
     if (ui->OldPasswordLineEdit->text() != password) {
         ui->ErrorLabel->setText("You entered the wrong old password!");
     }

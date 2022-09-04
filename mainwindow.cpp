@@ -31,6 +31,13 @@ void MainWindow::correct(QString& str) {
     str.remove(QChar(')'));
     str.replace(QString("'"), QString(""));
     str.remove(QChar('"'));
+
+    while (str[0] == ' ') {
+        str.remove(0, 1);
+    }
+    while (str[str.length() - 1] == ' ') {
+        str.remove(str.length() - 1, 1);
+    }
 }
 
 void MainWindow::refreshProfile() {
@@ -41,6 +48,10 @@ void MainWindow::refreshProfile() {
     QString profile_name = data.section(',', 1, 1);
     QString profile_surname = data.section(',', 2, 2);
     QString profile_status = data.section(',', 3, 3);
+
+    correct(profile_name);
+    correct(profile_surname);
+    correct(profile_status);
 
     ui->ProfileLoginLineEdit->setText(profile_login);
     ui->ProfileFirstNameLineEdit->setText(profile_name);
@@ -68,6 +79,6 @@ void MainWindow::clickProfileChangePasswordButton() {
     cp.exec();
     if (!cp.cancel) {
         refreshProfile();
+        ui->SuccessLabel->setText("The password changed successfully!");
     }
-    ui->SuccessLabel->setText("The password changed successfully!");
 }

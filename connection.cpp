@@ -29,14 +29,14 @@ void Connection::clickSignInButton() {
         ui->ErrorLabel->setText("The login must contain at least 1 character");
     }
     else {
-        QString data = server->sendData("SELECT id FROM users WHERE login = '" + ui->LoginLineEdit->text() + "';");
+        QString data = server->sendData("SELECT id FROM users WHERE login = '" + ui->LoginLineEdit->text() + "' AND password = '" + ui->PasswordLineEdit->text() + "';");
         if (data == "The request was completed successfully") {
             ui->ErrorLabel->setText("There is no such user");
         }
         else {
-            data.remove(QChar('('), Qt::CaseInsensitive);
-            data.remove(QChar(')'), Qt::CaseInsensitive);
-            data.remove(QChar(','), Qt::CaseInsensitive);
+            data.remove(QChar('('));
+            data.remove(QChar(')'));
+            data.remove(QChar(','));
             id = data.toInt();
             close();
         }
