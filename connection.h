@@ -2,7 +2,8 @@
 #define CONNECTION_H
 
 #include <QDialog>
-#include "tcpsocket.h"
+#include "tcpserver.h"
+#include "registration.h"
 
 namespace Ui {
 class Connection;
@@ -13,18 +14,18 @@ class Connection : public QDialog
     Q_OBJECT
 
 public:
-    explicit Connection(QWidget *parent = nullptr, QTcpSocket* sock = nullptr);
+    explicit Connection(QWidget *parent = nullptr, TCPServer* s = nullptr);
     ~Connection();
-    bool exit;
+    int getId() const;
 
 private slots:
-    void clickSendButton();
-    void clickExitButton();
+    void clickSignInButton();
     void clickSignUpButton();
 
 private:
     Ui::Connection *ui;
-    QTcpSocket* socket;
+    TCPServer* server;
+    int id;
 };
 
 #endif // CONNECTION_H

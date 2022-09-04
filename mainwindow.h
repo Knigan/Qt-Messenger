@@ -2,8 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "tcpsocket.h"
+#include "tcpserver.h"
 #include "connection.h"
+#include "changepassword.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,9 +17,16 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void refreshProfile();
+
+private slots:
+    void clickProfileApplyButton();
+    void clickProfileCancelButton();
+    void clickProfileChangePasswordButton();
 
 private:
     Ui::MainWindow *ui;
-    QTcpSocket* socket;
+    TCPServer* server;
+    int id;
 };
 #endif // MAINWINDOW_H
