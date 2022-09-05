@@ -13,11 +13,17 @@ MainWindow::MainWindow(QWidget *parent)
     d.exec();
     id = d.getId();
 
+    server->sendData("CREATE TABLE IF NOT EXISTS contacts (id INTEGER NOT NULL PRIMARY KEY, user_id INTEGER NOT NULL, contact_id INTEGER NOT NULL);");
+
     refreshProfile();
+    refreshContacts();
 
     connect(ui->ProfileApplyButton, &QPushButton::clicked, this, &MainWindow::clickProfileApplyButton);
     connect(ui->ProfileCancelButton, &QPushButton::clicked, this, &MainWindow::clickProfileCancelButton);
     connect(ui->ProfileChangePasswordButton, &QPushButton::clicked, this, &MainWindow::clickProfileChangePasswordButton);
+
+    connect(ui->AddContactButton, &QPushButton::clicked, this, &MainWindow::clickAddContactButton);
+    connect(ui->DeleteContactButton, &QPushButton::clicked, this, &MainWindow::clickDeleteContactButton);
 
 }
 
@@ -26,32 +32,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::correct(QString& str) {
-    str.remove(QChar('('));
-    str.remove(QChar(')'));
-    str.replace(QString("'"), QString(""));
-    str.remove(QChar('"'));
-
-    while (str[0] == ' ') {
-        str.remove(0, 1);
-    }
-    while (str[str.length() - 1] == ' ') {
-        str.remove(str.length() - 1, 1);
-    }
-}
-
 void MainWindow::refreshProfile() {
     QString data = server->sendData("SELECT login, name, surname, status FROM users WHERE id = " + QString::number(id) + ";");
-    correct(data);
 
-    QString profile_login = data.section(',', 0, 0);
-    QString profile_name = data.section(',', 1, 1);
-    QString profile_surname = data.section(',', 2, 2);
-    QString profile_status = data.section(',', 3, 3);
-
-    correct(profile_name);
-    correct(profile_surname);
-    correct(profile_status);
+    QString profile_login = TCPServer::correct(data.section(',', 0, 0));
+    QString profile_name = TCPServer::correct(data.section(',', 1, 1));
+    QString profile_surname = TCPServer::correct(data.section(',', 2, 2));
+    QString profile_status = TCPServer::correct(data.section(',', 3, 3));
 
     ui->ProfileLoginLineEdit->setText(profile_login);
     ui->ProfileFirstNameLineEdit->setText(profile_name);
@@ -59,26 +46,54 @@ void MainWindow::refreshProfile() {
     ui->ProfileStatusTextEdit->setText(profile_status);
 }
 
+void MainWindow::refreshContacts() {
+
+}
+
 void MainWindow::clickProfileApplyButton() {
-    server->sendData("UPDATE users SET login = '" + ui->ProfileLoginLineEdit->text()
-                     + "', name = '" + ui->ProfileFirstNameLineEdit->text()
-                     + "', surname = '" + ui->ProfileLastNameLineEdit->text()
-                     + "', status = '" + ui->ProfileStatusTextEdit->toPlainText()
-                     + "' WHERE id = " + QString::number(id));
-    refreshProfile();
-    ui->SuccessLabel->setText("Applied!");
+    QString login = ui->ProfileLoginLineEdit->text();
+    if (login.length() == 0) {
+        ui->ProfileSuccessLabel->setText("The login must contain at least 1 character");
+    }
+    else {
+        server->sendData("UPDATE users SET login = '" + ui->ProfileLoginLineEdit->text()
+                         + "', name = '" + ui->ProfileFirstNameLineEdit->text()
+                         + "', surname = '" + ui->ProfileLastNameLineEdit->text()
+                         + "', status = '" + ui->ProfileStatusTextEdit->toPlainText()
+                         + "' WHERE id = " + QString::number(id));
+        refreshProfile();
+        ui->ProfileSuccessLabel->setText("Applied!");
+    }
 }
 
 void MainWindow::clickProfileCancelButton() {
     refreshProfile();
-    ui->SuccessLabel->setText("Cancelled!");
+    ui->ProfileSuccessLabel->setText("Cancelled!");
 }
 
 void MainWindow::clickProfileChangePasswordButton() {
-    ChangePassword cp(id, this, server);
-    cp.exec();
-    if (!cp.cancel) {
+    ChangePassword pass(id, this, server);
+    pass.exec();
+    if (!pass.cancel) {
         refreshProfile();
-        ui->SuccessLabel->setText("The password changed successfully!");
+        ui->ProfileSuccessLabel->setText("The password changed successfully!");
+    }
+}
+
+void MainWindow::clickAddContactButton() {
+    AddContact cnt(id, this, server);
+    cnt.exec();
+    if (!cnt.cancel) {
+        refreshContacts();
+        ui->ContactsSuccessLabel->setText("A new contact was added!");
+    }
+}
+
+void MainWindow::clickDeleteContactButton() {
+    DeleteContact cnt(id, this, server);
+    cnt.exec();
+    if (!cnt.cancel) {
+        refreshContacts();
+        ui->ContactsSuccessLabel->setText("A contact was deleted!");
     }
 }

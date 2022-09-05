@@ -14,3 +14,18 @@ QString TCPServer::sendData(QString wData) {
     socket->close();
     return rData;
 }
+
+QString TCPServer::correct(QString str) {
+    str.remove(QChar('('));
+    str.remove(QChar(')'));
+    str.replace(QString("'"), QString(""));
+    str.remove(QChar('"'));
+    str.remove(QChar(','));
+
+    while (str[0] == ' ') {
+        str.remove(0, 1);
+    }
+    while (str[str.length() - 1] == ' ') {
+        str.remove(str.length() - 1, 1);
+    }
+}

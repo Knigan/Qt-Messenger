@@ -16,7 +16,7 @@ Connection::Connection(QWidget *parent, TCPServer* s) :
         server = s;
     }
 
-    server->sendData("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, login TEXT, password TEXT, name TEXT, surname TEXT, status TEXT);");
+    server->sendData("CREATE TABLE IF NOT EXISTS users (id INTEGER NOT NULL PRIMARY KEY, login TEXT, password TEXT, name TEXT, surname TEXT, status TEXT);");
 }
 
 Connection::~Connection()
@@ -29,14 +29,11 @@ void Connection::clickSignInButton() {
         ui->ErrorLabel->setText("The login must contain at least 1 character");
     }
     else {
-        QString data = server->sendData("SELECT id FROM users WHERE login = '" + ui->LoginLineEdit->text() + "' AND password = '" + ui->PasswordLineEdit->text() + "';");
+        QString data = TCPServer::correct(server->sendData("SELECT id FROM users WHERE login = '" + ui->LoginLineEdit->text() + "' AND password = '" + ui->PasswordLineEdit->text() + "';"));
         if (data == "The request was completed successfully") {
             ui->ErrorLabel->setText("There is no such user");
         }
         else {
-            data.remove(QChar('('));
-            data.remove(QChar(')'));
-            data.remove(QChar(','));
             id = data.toInt();
             close();
         }

@@ -5,6 +5,8 @@
 #include "tcpserver.h"
 #include "connection.h"
 #include "changepassword.h"
+#include "addcontact.h"
+#include "deletecontact.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,12 +20,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void refreshProfile();
-    void correct(QString&);
+    void refreshContacts();
 
 private slots:
     void clickProfileApplyButton();
     void clickProfileCancelButton();
     void clickProfileChangePasswordButton();
+    void clickAddContactButton();
+    void clickDeleteContactButton();
 
 private:
     Ui::MainWindow *ui;

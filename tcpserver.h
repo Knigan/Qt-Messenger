@@ -11,6 +11,7 @@ public:
     TCPServer();
     ~TCPServer() {}
     QString sendData(QString);
+    static QString correct(QString);
 
 private:
     QTcpSocket* socket;
