@@ -32,7 +32,7 @@ void AddContact::clickAddButton() {
         ui->ErrorLabel->setText("The login must contain at least 1 character");
     }
     else {
-        int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM contacts;")).toInt();
+        int count = TCPServer::correct(server->sendData("SELECT COUNT(id) FROM contacts;")).toInt();
         int contact_id = TCPServer::correct(server->sendData("SELECT id FROM users WHERE login = '" + login + "';")).toInt();
         server->sendData("INSERT INTO contacts VALUES (" + QString::number(count + 1) + ", " + QString::number(id) + ", " + QString::number(contact_id));
         close();

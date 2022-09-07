@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "tcpserver.h"
 #include "registration.h"
+#include <QSettings>
 
 namespace Ui {
 class Connection;
@@ -26,6 +27,7 @@ private:
     Ui::Connection *ui;
     TCPServer* server;
     int id;
+    QSettings* connection_settings;
 };
 
 #endif // CONNECTION_H

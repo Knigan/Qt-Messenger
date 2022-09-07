@@ -31,7 +31,7 @@ void Registration::clickSignUpButton() {
     else {
         QString check = server->sendData("SELECT id FROM users WHERE login = '" + ui->LoginLineEdit->text() + "';");
         if (check == "The request was completed successfully") {
-            int count = server->sendData("SELECT COUNT(*) FROM users;").toInt();
+            int count = server->sendData("SELECT COUNT(id) FROM users;").toInt();
             server->sendData("INSERT INTO users VALUES (" + QString::number(count + 1) + ", '" + ui->LoginLineEdit->text() + "', '"
                              + ui->PasswordLineEdit->text() + "', '" + ui->FirstNameLineEdit->text() + "', '" + ui->LastNameLineEdit->text() + "', '');");
             close();

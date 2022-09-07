@@ -21,6 +21,7 @@ QString TCPServer::correct(QString str) {
     str.replace(QString("'"), QString(""));
     str.remove(QChar('"'));
     str.remove(QChar(','));
+    str.remove(QChar('\n'));
 
     while (str[0] == ' ') {
         str.remove(0, 1);
@@ -28,4 +29,6 @@ QString TCPServer::correct(QString str) {
     while (str[str.length() - 1] == ' ') {
         str.remove(str.length() - 1, 1);
     }
+
+    return str;
 }
