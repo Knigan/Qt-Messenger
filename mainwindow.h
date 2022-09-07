@@ -28,6 +28,9 @@ private slots:
     void clickProfileChangePasswordButton();
     void clickAddContactButton();
     void clickDeleteContactButton();
+    void on_actionReconnect_triggered();
+    void on_actionRefresh_triggered();
+    void clickedContact(const QModelIndex&);
 
 private:
     Ui::MainWindow *ui;

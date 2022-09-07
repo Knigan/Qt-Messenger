@@ -36,17 +36,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Enter the login of a deleting contact</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="LoginLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>60</y>
-     <width>381</width>
-     <height>24</height>
-    </rect>
+    <string>Choose the deleting contact</string>
    </property>
   </widget>
   <widget class="QPushButton" name="DeleteButton">
@@ -86,6 +76,16 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="LoginComboBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>60</y>
+     <width>381</width>
+     <height>24</height>
+    </rect>
    </property>
   </widget>
  </widget>

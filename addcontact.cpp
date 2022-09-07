@@ -34,7 +34,7 @@ void AddContact::clickAddButton() {
     else {
         int count = TCPServer::correct(server->sendData("SELECT COUNT(id) FROM contacts;")).toInt();
         int contact_id = TCPServer::correct(server->sendData("SELECT id FROM users WHERE login = '" + login + "';")).toInt();
-        server->sendData("INSERT INTO contacts VALUES (" + QString::number(count + 1) + ", " + QString::number(id) + ", " + QString::number(contact_id));
+        server->sendData("INSERT INTO contacts VALUES (" + QString::number(count + 1) + ", " + QString::number(id) + ", " + QString::number(contact_id) + ");");
         close();
     }
 }

@@ -25,9 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->ProfileApplyButton, &QPushButton::clicked, this, &MainWindow::clickProfileApplyButton);
     connect(ui->ProfileCancelButton, &QPushButton::clicked, this, &MainWindow::clickProfileCancelButton);
     connect(ui->ProfileChangePasswordButton, &QPushButton::clicked, this, &MainWindow::clickProfileChangePasswordButton);
-
     connect(ui->AddContactButton, &QPushButton::clicked, this, &MainWindow::clickAddContactButton);
-    connect(ui->DeleteContactButton, &QPushButton::clicked, this, &MainWindow::clickDeleteContactButton);
+    connect(ui->DeleteContactButton, &QPushButton::clicked, this, &MainWindow::clickDeleteContactButton); 
+    connect(ui->ContactsTableWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(clickedContact(const QModelIndex&)));
 
 }
 
@@ -73,7 +73,6 @@ void MainWindow::refreshContacts() {
             ui->ContactsTableWidget->setItem(i, j, new QTableWidgetItem(TCPServer::correct(vector[i - 1].section(',', j, j))));
         }
     }
-
 }
 
 void MainWindow::clickProfileApplyButton() {
@@ -121,5 +120,27 @@ void MainWindow::clickDeleteContactButton() {
     if (!cnt.cancel) {
         refreshContacts();
         ui->ContactsSuccessLabel->setText("A contact was deleted!");
+    }
+}
+
+void MainWindow::on_actionReconnect_triggered() {
+    Connection d(this, server);
+    d.exec();
+    id = d.getId();
+
+    refreshProfile();
+    refreshContacts();
+}
+
+
+void MainWindow::on_actionRefresh_triggered() {
+    refreshProfile();
+    refreshContacts();
+}
+
+void MainWindow::clickedContact(const QModelIndex& index) {
+    QString status = TCPServer::correct(server->sendData("SELECT status FROM users WHERE login = '" + index.data().toString() + "';"));
+    if (status != "The request was completed successfully") {
+        ui->ContactsTextEdit->setText(status);
     }
 }

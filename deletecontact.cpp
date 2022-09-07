@@ -18,6 +18,14 @@ DeleteContact::DeleteContact(int ID, QWidget *parent, TCPServer* s) :
     connect(ui->DeleteButton, &QPushButton::clicked, this, &DeleteContact::clickDeleteButton);
     connect(ui->CancelButton, &QPushButton::clicked, this, &DeleteContact::clickCancelButton);
 
+    ui->LoginComboBox->clear();
+
+    int count = TCPServer::correct(server->sendData("SELECT COUNT(id) FROM contacts WHERE user_id = " + QString::number(id) + ";")).toInt();
+    QString data = server->sendData("SELECT users.login FROM users JOIN contacts ON users.id = contacts.contact_id WHERE contacts.user_id = " + QString::number(id) + ";");
+    for (int i = 0; i < count; ++i) {
+        ui->LoginComboBox->addItem(TCPServer::correct(data.section('\n', i, i)));
+    }
+
     cancel = false;
 }
 
@@ -27,15 +35,10 @@ DeleteContact::~DeleteContact()
 }
 
 void DeleteContact::clickDeleteButton() {
-    QString login = ui->LoginLineEdit->text();
-    if (login.length() == 0) {
-        ui->ErrorLabel->setText("The login must contain at least 1 character");
-    }
-    else {
-        int contact_id = TCPServer::correct(server->sendData("SELECT id FROM users WHERE login = '" + login + "';")).toInt();
-        server->sendData("DELETE FROM contacts WHERE user_id = " + QString::number(id) + " AND contact_id = " + QString::number(contact_id) + ";");
-        close();
-    }
+    QString login = ui->LoginComboBox->currentText();
+    int contact_id = TCPServer::correct(server->sendData("SELECT id FROM users WHERE login = '" + login + "';")).toInt();
+    server->sendData("DELETE FROM contacts WHERE user_id = " + QString::number(id) + " AND contact_id = " + QString::number(contact_id) + ";");
+    close();
 }
 
 void DeleteContact::clickCancelButton() {

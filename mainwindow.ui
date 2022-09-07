@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>401</width>
+      <width>421</width>
       <height>711</height>
      </rect>
     </property>
@@ -27,7 +27,7 @@
      <string/>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="Profile">
      <property name="accessibleName">
@@ -185,6 +185,39 @@
      <attribute name="title">
       <string>Chats</string>
      </attribute>
+     <widget class="QTableWidget" name="ChatsTableWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>381</width>
+        <height>551</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="ChatsTextEdit">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>560</y>
+        <width>341</width>
+        <height>70</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ChatsSendButton">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>560</y>
+        <width>41</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>-&gt;</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="Contacts">
      <attribute name="title">
@@ -194,18 +227,18 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>10</y>
-        <width>361</width>
-        <height>541</height>
+        <y>0</y>
+        <width>381</width>
+        <height>441</height>
        </rect>
       </property>
      </widget>
      <widget class="QPushButton" name="AddContactButton">
       <property name="geometry">
        <rect>
-        <x>250</x>
-        <y>560</y>
-        <width>121</width>
+        <x>260</x>
+        <y>460</y>
+        <width>131</width>
         <height>41</height>
        </rect>
       </property>
@@ -217,8 +250,8 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>560</y>
-        <width>131</width>
+        <y>460</y>
+        <width>141</width>
         <height>41</height>
        </rect>
       </property>
@@ -239,6 +272,29 @@
        <string/>
       </property>
      </widget>
+     <widget class="QPushButton" name="CheckStatusButton">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>460</y>
+        <width>111</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Check status</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="ContactsTextEdit">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>510</y>
+        <width>381</width>
+        <height>151</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -255,35 +311,15 @@
     <property name="title">
      <string>Menu</string>
     </property>
-    <addaction name="actionConnect"/>
+    <addaction name="actionReconnect"/>
     <addaction name="actionRefresh"/>
    </widget>
    <addaction name="Menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionProfile">
+  <action name="actionReconnect">
    <property name="text">
-    <string>Profile</string>
-   </property>
-  </action>
-  <action name="actionChats">
-   <property name="text">
-    <string>Chats</string>
-   </property>
-  </action>
-  <action name="actionContacts">
-   <property name="text">
-    <string>Contacts</string>
-   </property>
-  </action>
-  <action name="actionConnect">
-   <property name="text">
-    <string>Connect</string>
-   </property>
-  </action>
-  <action name="actionExit">
-   <property name="text">
-    <string>Exit</string>
+    <string>Reconnect</string>
    </property>
   </action>
   <action name="actionRefresh">
