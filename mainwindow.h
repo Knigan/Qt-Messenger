@@ -2,11 +2,14 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTime>
 #include "tcpserver.h"
 #include "connection.h"
 #include "changepassword.h"
 #include "addcontact.h"
 #include "deletecontact.h"
+#include "createchat.h"
+#include "configurechat.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,20 +24,39 @@ public:
     ~MainWindow();
     void refreshProfile();
     void refreshContacts();
+    void refreshChatsList();
+    void refreshChat(int chat_id);
 
 private slots:
     void clickProfileApplyButton();
     void clickProfileCancelButton();
     void clickProfileChangePasswordButton();
+
     void clickAddContactButton();
     void clickDeleteContactButton();
-    void on_actionReconnect_triggered();
-    void on_actionRefresh_triggered();
     void clickedContact(const QModelIndex&);
+
+    void on_actionReconnect_triggered();
+    void on_actionRefresh_triggered();  
+
+    void clickChatsSendButton();
+    void clickChatsCreateChatButton();
+    void clickChatsConfigureChatButton();
+    void clickedChat(const QModelIndex&);
 
 private:
     Ui::MainWindow *ui;
     TCPServer* server;
-    int id;
+    int chat_id;
+
+    struct User {
+        int id;
+        QString login;
+        QString name;
+        QString surname;
+        QString status;
+    };
+
+    User u;
 };
 #endif // MAINWINDOW_H

@@ -11,7 +11,9 @@ CONFIG += c++17
 SOURCES += \
     addcontact.cpp \
     changepassword.cpp \
+    configurechat.cpp \
     connection.cpp \
+    createchat.cpp \
     deletecontact.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -21,7 +23,9 @@ SOURCES += \
 HEADERS += \
     addcontact.h \
     changepassword.h \
+    configurechat.h \
     connection.h \
+    createchat.h \
     deletecontact.h \
     mainwindow.h \
     registration.h \
@@ -30,7 +34,9 @@ HEADERS += \
 FORMS += \
     addcontact.ui \
     changepassword.ui \
+    configurechat.ui \
     connection.ui \
+    createchat.ui \
     deletecontact.ui \
     mainwindow.ui \
     registration.ui
