@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTime>
+#include <QDateTime>
 #include "tcpserver.h"
 #include "connection.h"
 #include "changepassword.h"

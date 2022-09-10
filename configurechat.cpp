@@ -24,13 +24,10 @@ ConfigureChat::ConfigureChat(int ID, QWidget *parent, TCPServer* s) :
 
     ui->ContactComboBox->clear();
 
-    int count = TCPServer::correct(server->sendData("SELECT COUNT(id) FROM contacts WHERE user_id = " + QString::number(id) + ";")).toInt();
     QString data = server->sendData("SELECT users.login FROM contacts JOIN users ON contacts.contact_id = users.id WHERE contacts.user_id = " + QString::number(id) + ";");
-    for (int i = 0; i < count; ++i) {
-        ui->ContactComboBox->addItem(TCPServer::correct(data.section('\n', i, i)));
+    for (int i = 0; i < data.count("[?~?]"); ++i) {
+        ui->ContactComboBox->addItem(TCPServer::correct(data.section("[?~?]", i, i)));
     }
-
-    cancel = false;
 }
 
 ConfigureChat::~ConfigureChat()
@@ -41,24 +38,24 @@ ConfigureChat::~ConfigureChat()
 void ConfigureChat::refreshChatsList() {
     ui->ChatComboBox->clear();
 
-    int count = TCPServer::correct(server->sendData("SELECT COUNT(id) FROM chats WHERE user_id = " + QString::number(id) + ";")).toInt();
     QString data = server->sendData("SELECT name FROM chats WHERE user_id = " + QString::number(id) + ";");
-    for (int i = 0; i < count; ++i) {
-        ui->ChatComboBox->addItem(TCPServer::correct(data.section('\n', i, i)));
+    for (int i = 0; i < data.count("[?~?]"); ++i) {
+        ui->ChatComboBox->addItem(TCPServer::correct(data.section("[?~?]", i, i)));
     }
 }
 
 void ConfigureChat::clickSendInviteButton() {
-    int chat_id = TCPServer::correct(ui->ChatComboBox->currentText().section(':', 1, 1)).toInt();
+    QString name = ui->ChatComboBox->currentText();
+    int chat_id = TCPServer::correct(name.section(':', 1, 1)).toInt();
     int user_id = TCPServer::correct(server->sendData("SELECT id FROM users WHERE login = '" + ui->ContactComboBox->currentText() + "';")).toInt();
     QString check = TCPServer::correct(server->sendData("SELECT id FROM chats WHERE chat_id = " + QString::number(chat_id) + " AND user_id = " + QString::number(user_id) + ";"));
     if (check != "The request was completed successfully") {
         ui->SuccessLabel->setText("This user is already in this chat");
     }
     else {
-        int count = TCPServer::correct(server->sendData("SELECT COUNT(id) FROM chats;")).toInt();
-        server->sendData("INSERT INTO chats VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", '" + ui->ChatComboBox->currentText()
-                         + " : " + QString::number(chat_id) + "', " + QString::number(user_id) + ");");
+        int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chats;")).toInt();
+        server->sendData("INSERT INTO chats VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", '" + name
+                         + "', " + QString::number(user_id) + ");");
         ui->SuccessLabel->setText("Invite was sent successfully!");
     }
 }
@@ -73,11 +70,16 @@ void ConfigureChat::clickRenameChatButton() {
 void ConfigureChat::clickDeleteChatButton() {
     int chat_id = TCPServer::correct(ui->ChatComboBox->currentText().section(':', 1, 1)).toInt();
     server->sendData("DELETE FROM chats WHERE chat_id = " + QString::number(chat_id) + " AND user_id = " + QString::number(id) + ";");
+
+    int check_count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chats WHERE chat_id = " + QString::number(chat_id) + ";")).toInt();
+    if (check_count == 0) {
+        server->sendData("DELETE FROM chatcontent WHERE chat_id = " + QString::number(chat_id) + ";");
+    }
+
     refreshChatsList();
     ui->SuccessLabel->setText("The chat was deleted successfully!");
 }
 
 void ConfigureChat::clickCancelButton() {
-    cancel = true;
     close();
 }

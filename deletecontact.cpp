@@ -20,10 +20,9 @@ DeleteContact::DeleteContact(int ID, QWidget *parent, TCPServer* s) :
 
     ui->LoginComboBox->clear();
 
-    int count = TCPServer::correct(server->sendData("SELECT COUNT(id) FROM contacts WHERE user_id = " + QString::number(id) + ";")).toInt();
     QString data = server->sendData("SELECT users.login FROM users JOIN contacts ON users.id = contacts.contact_id WHERE contacts.user_id = " + QString::number(id) + ";");
-    for (int i = 0; i < count; ++i) {
-        ui->LoginComboBox->addItem(TCPServer::correct(data.section('\n', i, i)));
+    for (int i = 0; i < data.count("[?~?]"); ++i) {
+        ui->LoginComboBox->addItem(TCPServer::correct(data.section("[?~?]", i, i)));
     }
 
     cancel = false;

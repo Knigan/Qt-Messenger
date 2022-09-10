@@ -16,7 +16,6 @@ public:
     explicit ConfigureChat(int ID, QWidget *parent = nullptr, TCPServer* s = nullptr);
     ~ConfigureChat();
     void refreshChatsList();
-    bool cancel;
 
 private slots:
     void clickSendInviteButton();

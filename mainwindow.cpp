@@ -69,15 +69,16 @@ void MainWindow::refreshProfile() {
 void MainWindow::refreshContacts() {
     ui->ContactsTableWidget->clear();
 
-    int count = TCPServer::correct(server->sendData("SELECT COUNT(id) FROM contacts WHERE user_id = " + QString::number(u.id) + ";")).toInt();
+    QString data = server->sendData("SELECT users.login, users.surname, users.name FROM users JOIN contacts ON users.id = contacts.contact_id WHERE contacts.user_id = "
+                                    + QString::number(u.id) + ";");
+    int count = data.count("[?~?]");
+
     ui->ContactsTableWidget->setRowCount(count + 1);
     ui->ContactsTableWidget->setColumnCount(3);
 
-    QString data = server->sendData("SELECT users.login, users.surname, users.name FROM users JOIN contacts ON users.id = contacts.contact_id WHERE contacts.user_id = " + QString::number(u.id) + ";");
     QVector<QString> vector;
-
     for (int i = 0; i < count; ++i) {
-        vector.append(data.section('\n', i, i));
+        vector.append(data.section("[?~?]", i, i));
     }
 
     ui->ContactsTableWidget->setItem(0, 0, new QTableWidgetItem("Login"));
@@ -95,11 +96,10 @@ void MainWindow::refreshChatsList() {
     ui->ChatsListWidget->clear();
     chat_id = 0;
 
-    int count = TCPServer::correct(server->sendData("SELECT COUNT(id) FROM chats WHERE user_id = " + QString::number(u.id) + ";")).toInt();
     QString data = server->sendData("SELECT name FROM chats WHERE user_id = " + QString::number(u.id) + ";");
 
-    for (int i = 0; i < count; ++i) {
-        ui->ChatsListWidget->addItem(TCPServer::correct(data.section('\n', i, i)));
+    for (int i = 0; i < data.count("[?~?]"); ++i) {
+        ui->ChatsListWidget->addItem(TCPServer::correct(data.section("[?~?]", i, i)));
     }
 }
 
@@ -107,12 +107,18 @@ void MainWindow::refreshChat(int chatID) {
     ui->ChatsListWidget->clear();
     chat_id = chatID;
 
-    int count = TCPServer::correct(server->sendData("SELECT COUNT(id) FROM chatcontent WHERE chatcontent.chat_id = " + QString::number(chat_id) + ";")).toInt();
-    QString data = server->sendData("SELECT chatcontent.message FROM chatcontent JOIN chats ON chatcontent.chat_id = chats.chat_id WHERE chatcontent.chat_id = " + QString::number(chat_id));
+    QString data = server->sendData("SELECT message FROM chatcontent WHERE chat_id = "
+                                    + QString::number(chat_id) + " ORDER BY id;");
 
-
-    for (int i = 0; i < count; ++i) {
-        ui->ChatsListWidget->addItem(TCPServer::correct(data.section('\n', i, i)));
+    for (int i = 0; i < data.count("[?~?]"); ++i) {
+        QString str = data.section("[?~?]", i, i);
+        if (i % 2 == 0) {
+            str.remove(0, 2);
+        }
+        else {
+            str.remove(str.length() - 3, 3);
+        }
+        ui->ChatsListWidget->addItem(str);
     }
 }
 
@@ -172,6 +178,7 @@ void MainWindow::on_actionReconnect_triggered() {
     refreshProfile();
     refreshContacts();
     refreshChatsList();
+    ui->ChatsTextEdit->clear();
 }
 
 
@@ -186,6 +193,9 @@ void MainWindow::clickedContact(const QModelIndex& index) {
     if (status != "The request was completed successfully") {
         ui->ContactsTextEdit->setText(status);
     }
+    else {
+        ui->ContactsTextEdit->setText("");
+    }
 }
 
 void MainWindow::clickChatsSendButton() {
@@ -194,8 +204,9 @@ void MainWindow::clickChatsSendButton() {
     }
     QString data = ui->ChatsTextEdit->toPlainText();
     if (data.length() != 0) {
-        int count = TCPServer::correct(server->sendData("SELECT COUNT(id) FROM chatcontent;")).toInt();
-        server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count) + ", " + QString::number(chat_id) + ", '" + QTime::currentTime().toString("HH:mm") + " " + u.login + ":" + data + "');");
+        int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chatcontent;")).toInt();
+        server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", '" + u.surname + " " + u.name
+                         + " (" + QDateTime::currentDateTime().toString("dd.MM.yy HH:mm:ss") + "):[?~?]" + data + "');");
     }
     refreshChat(chat_id);
 }
@@ -210,8 +221,10 @@ void MainWindow::clickChatsCreateChatButton() {
 }
 
 void MainWindow::clickedChat(const QModelIndex& index) {
-    int chatID = TCPServer::correct(index.data().toString().section(':', 1, 1)).toInt();
-    refreshChat(chatID);
+    if (chat_id == 0) {
+        int chatID = TCPServer::correct(index.data().toString().section(':', 1, 1)).toInt();
+        refreshChat(chatID);
+    }
 }
 
 void MainWindow::clickChatsConfigureChatButton() {
