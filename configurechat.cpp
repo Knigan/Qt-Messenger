@@ -1,10 +1,12 @@
 #include "configurechat.h"
 #include "ui_configurechat.h"
 
-ConfigureChat::ConfigureChat(int ID, QWidget *parent, TCPServer* s) :
+ConfigureChat::ConfigureChat(int ID, QString Surname, QString Name, QWidget *parent, TCPServer* s) :
     QDialog(parent),
     ui(new Ui::ConfigureChat),
-    id(ID)
+    id(ID),
+    surname(Surname),
+    name(Name)
 {
     ui->setupUi(this);
 
@@ -74,6 +76,12 @@ void ConfigureChat::clickDeleteChatButton() {
     int check_count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chats WHERE chat_id = " + QString::number(chat_id) + ";")).toInt();
     if (check_count == 0) {
         server->sendData("DELETE FROM chatcontent WHERE chat_id = " + QString::number(chat_id) + ";");
+    }
+    else {
+        int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chatcontent;")).toInt();
+
+        server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", 'System " + "(" +
+                         QDateTime::currentDateTime().toString("dd.MM.yy HH:mm:ss") + "):[?~?]" + surname + " " + name + " left from this chat');");
     }
 
     refreshChatsList();

@@ -228,7 +228,7 @@ void MainWindow::clickedChat(const QModelIndex& index) {
 }
 
 void MainWindow::clickChatsConfigureChatButton() {
-    ConfigureChat c(u.id, this, server);
+    ConfigureChat c(u.id, u.surname, u.name, this, server);
     c.exec();
     refreshChatsList();
 }

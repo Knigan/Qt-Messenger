@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "tcpserver.h"
+#include <QDateTime>
 
 namespace Ui {
 class ConfigureChat;
@@ -13,7 +14,7 @@ class ConfigureChat : public QDialog
     Q_OBJECT
 
 public:
-    explicit ConfigureChat(int ID, QWidget *parent = nullptr, TCPServer* s = nullptr);
+    explicit ConfigureChat(int ID, QString Surname, QString Name, QWidget *parent = nullptr, TCPServer* s = nullptr);
     ~ConfigureChat();
     void refreshChatsList();
 
@@ -26,7 +27,10 @@ private slots:
 private:
     Ui::ConfigureChat *ui;
     TCPServer* server;
+
     int id;
+    QString surname;
+    QString name;
 };
 
 #endif // CONFIGURECHAT_H
