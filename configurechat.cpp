@@ -64,9 +64,22 @@ void ConfigureChat::clickSendInviteButton() {
 
 void ConfigureChat::clickRenameChatButton() {
     int chat_id = TCPServer::correct(ui->ChatComboBox->currentText().section(':', 1, 1)).toInt();
-    server->sendData("UPDATE chats SET name = '" + ui->RenameLineEdit->text() + " : " + QString::number(chat_id) + "' WHERE chat_id = " + QString::number(chat_id) + ";");
-    refreshChatsList();
-    ui->SuccessLabel->setText("The chat was renamed successfully!");
+    QString old_name = TCPServer::correct(server->sendData("SELECT name FROM chats WHERE chat_id = " + QString::number(chat_id) + ";")).section(':', 0, 0);
+    QString new_name = ui->RenameLineEdit->text();
+    if (new_name.contains(':')) {
+        ui->SuccessLabel->setText("Chat name cannot contain a ':' character");
+    }
+    else {
+        server->sendData("UPDATE chats SET name = '" + new_name + " : " + QString::number(chat_id) + "' WHERE chat_id = " + QString::number(chat_id) + ";");
+
+        int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chatcontent;")).toInt();
+
+        server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", 'System " + "(" +
+                         QDateTime::currentDateTime().toString("dd.MM.yy HH:mm:ss") + "):[?~?]" + surname + " " + name + " renamed this chat (" + old_name + " -> " + new_name + ")');");
+
+        refreshChatsList();
+        ui->SuccessLabel->setText("The chat was renamed successfully!");
+    }
 }
 
 void ConfigureChat::clickDeleteChatButton() {
