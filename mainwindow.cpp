@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
             refreshChat(chat_id);
         }
     });
-    timer->start(5000);
+    timer->start(1000);
 }
 
 MainWindow::~MainWindow()
