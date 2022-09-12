@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QDateTime>
+#include <QTimer>
 #include "tcpserver.h"
 #include "connection.h"
 #include "changepassword.h"
@@ -26,6 +27,7 @@ public:
     void refreshContacts();
     void refreshChatsList();
     void refreshChat(int chat_id);
+    void refresh();
 
 private slots:
     void clickProfileApplyButton();
@@ -48,6 +50,7 @@ private:
     Ui::MainWindow *ui;
     TCPServer* server;
     int chat_id;
+    QTimer* timer;
 
     struct User {
         int id;

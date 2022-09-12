@@ -62,8 +62,12 @@ void ConfigureChat::clickSendInviteButton() {
 
         count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chatcontent;")).toInt();
 
+        QString data = server->sendData("SELECT surname, name FROM users WHERE id = " + QString::number(user_id));
+        QString Surname = TCPServer::correct(data.section(',', 0, 0));
+        QString Name = TCPServer::correct(data.section(',', 1, 1));
+
         server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", 'System " + "(" +
-                         QDateTime::currentDateTime().toString("dd.MM.yy HH:mm:ss") + "):[?~?]" + surname + " " + name + " left from this chat');");
+                         QDateTime::currentDateTime().toString("dd.MM.yy HH:mm:ss") + "):[?~?]" + Surname + " " + Name + " joined this chat!');");
 
     }
 }

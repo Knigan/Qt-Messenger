@@ -27,7 +27,7 @@
      <string/>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="Profile">
      <property name="accessibleName">
@@ -288,9 +288,9 @@
      <widget class="QPushButton" name="AddContactButton">
       <property name="geometry">
        <rect>
-        <x>260</x>
+        <x>240</x>
         <y>460</y>
-        <width>131</width>
+        <width>151</width>
         <height>41</height>
        </rect>
       </property>
@@ -303,7 +303,7 @@
        <rect>
         <x>10</x>
         <y>460</y>
-        <width>141</width>
+        <width>151</width>
         <height>41</height>
        </rect>
       </property>
@@ -322,19 +322,6 @@
       </property>
       <property name="text">
        <string/>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="CheckStatusButton">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>460</y>
-        <width>111</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Check status</string>
       </property>
      </widget>
      <widget class="QTextEdit" name="ContactsTextEdit">
