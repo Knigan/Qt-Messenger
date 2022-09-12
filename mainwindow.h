@@ -27,7 +27,6 @@ public:
     void refreshContacts();
     void refreshChatsList();
     void refreshChat(int chat_id);
-    void refresh();
 
 private slots:
     void clickProfileApplyButton();

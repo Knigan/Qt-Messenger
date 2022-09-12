@@ -42,9 +42,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->ChatsListWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(clickedChat(const QModelIndex&)));
 
     timer = new QTimer(this);
-    timer->setInterval(1000);
-    connect(timer, SIGNAL(timeout()), this, SLOT(refresh));
-    timer->start();
+    connect(timer, &QTimer::timeout, this, [this]() {
+        if (chat_id != 0) {
+            refreshChat(chat_id);
+        }
+    });
+    timer->start(5000);
 }
 
 MainWindow::~MainWindow()
@@ -124,12 +127,6 @@ void MainWindow::refreshChat(int chatID) {
             str.remove(str.length() - 3, 3);
         }
         ui->ChatsListWidget->addItem(str);
-    }
-}
-
-void MainWindow::refresh() {
-    if (chat_id != 0) {
-        refreshChat(chat_id);
     }
 }
 
