@@ -33,9 +33,15 @@ void AddContact::clickAddButton() {
     }
     else {
         int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM contacts;")).toInt();
-        int contact_id = TCPServer::correct(server->sendData("SELECT id FROM users WHERE login = '" + login + "';")).toInt();
-        server->sendData("INSERT INTO contacts VALUES (" + QString::number(count + 1) + ", " + QString::number(id) + ", " + QString::number(contact_id) + ");");
-        close();
+        QString str = TCPServer::correct(server->sendData("SELECT id FROM users WHERE login = '" + login + "';"));
+        if (str == "The request was completed successfully") {
+            ui->ErrorLabel->setText("There is no such user");
+        }
+        else {
+            int contact_id = str.toInt();
+            server->sendData("INSERT INTO contacts VALUES (" + QString::number(count + 1) + ", " + QString::number(id) + ", " + QString::number(contact_id) + ");");
+            close();
+        }
     }
 }
 
