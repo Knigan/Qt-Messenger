@@ -118,6 +118,8 @@ void MainWindow::refreshChat(int chatID) {
     QString data = server->sendData("SELECT message FROM chatcontent WHERE chat_id = "
                                     + QString::number(chat_id) + " ORDER BY id;");
 
+
+
     for (int i = 0; i < data.count("[?~?]"); ++i) {
         QString str = data.section("[?~?]", i, i);
         if (i % 2 == 0) {
@@ -213,8 +215,19 @@ void MainWindow::clickChatsSendButton() {
     QString data = ui->ChatsTextEdit->toPlainText();
     if (data.length() != 0) {
         int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chatcontent;")).toInt();
-        server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", '" + u.surname + " " + u.name
+        if (data.contains('\n')) {
+            for (int i = 0; i <= data.count('\n'); ++i) {
+                server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + i + 1) + ", " + QString::number(chat_id) + ", '" + u.surname + " " + u.name
+                             + " (" + QDateTime::currentDateTime().toString("dd.MM.yy HH:mm:ss") + "):[?~?]" + data.section('\n', i, i) + "');");
+            }
+        }
+
+        else {
+            server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", '" + u.surname + " " + u.name
                          + " (" + QDateTime::currentDateTime().toString("dd.MM.yy HH:mm:ss") + "):[?~?]" + data + "');");
+        }
+
+        ui->ChatsTextEdit->clear();
     }
     refreshChat(chat_id);
 }

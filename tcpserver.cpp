@@ -1,7 +1,7 @@
 #include "tcpserver.h"
 
 TCPServer::TCPServer() :
-    host(LOCALHOST)
+    host(REMOTEHOST)
 {
     socket = new QTcpSocket;
 }
