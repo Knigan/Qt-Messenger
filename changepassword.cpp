@@ -27,18 +27,26 @@ ChangePassword::~ChangePassword()
 }
 
 void ChangePassword::clickApplyButton() {
-    QString password = TCPServer::correct(server->sendData("SELECT password FROM users WHERE id = " + QString::number(id)));
-    if (ui->OldPasswordLineEdit->text() != password) {
+    bool flag = true;
+    QString old_password = TCPServer::correct(server->sendData("SELECT password FROM users WHERE id = " + QString::number(id)));
+    QString new_password = ui->NewPasswordLineEdit->text();
+    if (ui->OldPasswordLineEdit->text() != old_password) {
         ui->ErrorLabel->setText("You entered the wrong old password!");
     }
     else {
-        if (ui->NewPasswordLineEdit->text() == password) {
-            ui->ErrorLabel->setText("The new password must differ from the old password!");
+        if (new_password != TCPServer::correct(new_password)) {
+            ui->ErrorLabel->setText("Password contains restricted characters or excess space symbols");
+            flag = false;
         }
-        else {
-            server->sendData("UPDATE users SET password = '" + ui->NewPasswordLineEdit->text()
-                             + "' WHERE id = " + QString::number(id));
-            close();
+        if (flag) {
+            if (new_password == old_password) {
+                ui->ErrorLabel->setText("The new password must differ from the old password!");
+            }
+            else {
+                server->sendData("UPDATE users SET password = '" + ui->NewPasswordLineEdit->text()
+                                 + "' WHERE id = " + QString::number(id));
+                close();
+            }
         }
     }
 }

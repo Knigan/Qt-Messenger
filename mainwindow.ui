@@ -21,7 +21,7 @@
        <string/>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Profile">
        <property name="accessibleName">
@@ -31,26 +31,6 @@
         <string>Profile</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QLabel" name="ProfileLoginLabel">
-          <property name="text">
-           <string>Login</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1" colspan="3">
-         <widget class="QLineEdit" name="ProfileLoginLineEdit"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="ProfileFirstNameLabel">
-          <property name="text">
-           <string>First name</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1" colspan="3">
-         <widget class="QLineEdit" name="ProfileFirstNameLineEdit"/>
-        </item>
         <item row="2" column="0">
          <widget class="QLabel" name="ProfileLastNameLabel">
           <property name="text">
@@ -58,8 +38,32 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1" colspan="3">
-         <widget class="QLineEdit" name="ProfileLastNameLineEdit"/>
+        <item row="0" column="0">
+         <widget class="QLabel" name="ProfileLoginLabel">
+          <property name="text">
+           <string>Login</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1" colspan="3">
+         <widget class="QTextEdit" name="ProfileStatusTextEdit"/>
+        </item>
+        <item row="6" column="3">
+         <widget class="QPushButton" name="ProfileCancelButton">
+          <property name="text">
+           <string>Cancel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="2">
+         <widget class="QPushButton" name="ProfileChangePasswordButton">
+          <property name="text">
+           <string>Change password</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="3">
+         <widget class="QLineEdit" name="ProfileFirstNameLineEdit"/>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="ProfileStatusLabel">
@@ -68,34 +72,37 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1" colspan="3">
-         <widget class="QTextEdit" name="ProfileStatusTextEdit"/>
-        </item>
-        <item row="4" column="0" colspan="2">
-         <widget class="QPushButton" name="ProfileChangePasswordButton">
-          <property name="text">
-           <string>Change password</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
+        <item row="6" column="2">
          <widget class="QPushButton" name="ProfileApplyButton">
           <property name="text">
            <string>Apply</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="3">
-         <widget class="QPushButton" name="ProfileCancelButton">
-          <property name="text">
-           <string>Cancel</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0" colspan="4">
+        <item row="7" column="0" colspan="4">
          <widget class="QLabel" name="ProfileSuccessLabel">
           <property name="text">
            <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" colspan="3">
+         <widget class="QLineEdit" name="ProfileLoginLineEdit"/>
+        </item>
+        <item row="2" column="1" colspan="3">
+         <widget class="QLineEdit" name="ProfileLastNameLineEdit"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="ProfileFirstNameLabel">
+          <property name="text">
+           <string>First name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" rowspan="2" colspan="4">
+         <widget class="QLabel" name="TipLabel">
+          <property name="text">
+           <string>Restricted characters: comma, round brakets, quotation marks</string>
           </property>
          </widget>
         </item>

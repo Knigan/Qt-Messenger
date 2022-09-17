@@ -53,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete server;
+    delete timer;
 }
 
 void MainWindow::refreshProfile() {
@@ -61,7 +63,7 @@ void MainWindow::refreshProfile() {
     QString profile_login = TCPServer::correct(data.section(',', 0, 0));
     QString profile_name = TCPServer::correct(data.section(',', 1, 1));
     QString profile_surname = TCPServer::correct(data.section(',', 2, 2));
-    QString profile_status = TCPServer::correct(data.section(',', 3, 3));
+    QString profile_status = data.section(',', 3).section("'", 1, 1);
 
     u.login = profile_login;
     u.name = profile_name;
@@ -72,6 +74,8 @@ void MainWindow::refreshProfile() {
     ui->ProfileFirstNameLineEdit->setText(profile_name);
     ui->ProfileLastNameLineEdit->setText(profile_surname);
     ui->ProfileStatusTextEdit->setText(profile_status);
+
+    ui->ProfileSuccessLabel->clear();
 }
 
 void MainWindow::refreshContacts() {
@@ -98,6 +102,8 @@ void MainWindow::refreshContacts() {
             ui->ContactsTableWidget->setItem(i, j, new QTableWidgetItem(TCPServer::correct(vector[i - 1].section(',', j, j))));
         }
     }
+
+    ui->ContactsSuccessLabel->clear();
 }
 
 void MainWindow::refreshChatsList() {
@@ -109,6 +115,8 @@ void MainWindow::refreshChatsList() {
     for (int i = 0; i < data.count("[?~?]"); ++i) {
         ui->ChatsListWidget->addItem(TCPServer::correct(data.section("[?~?]", i, i)));
     }
+
+    ui->ChatsSuccessLabel->clear();
 }
 
 void MainWindow::refreshChat(int chatID) {
@@ -128,23 +136,47 @@ void MainWindow::refreshChat(int chatID) {
         else {
             str.remove(str.length() - 3, 3);
         }
-        ui->ChatsListWidget->addItem(str);
+        QListWidgetItem* item = new QListWidgetItem(str);
+        ui->ChatsListWidget->addItem(item);
+        ui->ChatsListWidget->scrollToItem(item);
     }
 }
 
 void MainWindow::clickProfileApplyButton() {
+    bool flag = true;
     QString login = ui->ProfileLoginLineEdit->text();
+    QString name = ui->ProfileFirstNameLineEdit->text();
+    QString surname = ui->ProfileLastNameLineEdit->text();
+    QString status = ui->ProfileStatusTextEdit->toPlainText();
     if (login.length() == 0) {
         ui->ProfileSuccessLabel->setText("The login must contain at least 1 character");
     }
     else {
-        server->sendData("UPDATE users SET login = '" + ui->ProfileLoginLineEdit->text()
-                         + "', name = '" + ui->ProfileFirstNameLineEdit->text()
-                         + "', surname = '" + ui->ProfileLastNameLineEdit->text()
-                         + "', status = '" + ui->ProfileStatusTextEdit->toPlainText()
-                         + "' WHERE id = " + QString::number(u.id) + ";");
-        refreshProfile();
-        ui->ProfileSuccessLabel->setText("Applied!");
+        if (login != TCPServer::correct(login)) {
+            ui->ProfileSuccessLabel->setText("Login contains restricted characters or excess space symbols");
+            flag = false;
+        }
+        if (name != TCPServer::correct(name)) {
+            ui->ProfileSuccessLabel->setText("Name contains restricted characters or excess space symbols");
+            flag = false;
+        }
+        if (surname != TCPServer::correct(surname)) {
+            ui->ProfileSuccessLabel->setText("Surname contains restricted characters or excess space symbols");
+            flag = false;
+        }
+        if (status.contains("'")) {
+            ui->ProfileSuccessLabel->setText("Status cannot contain single quotes");
+            flag = false;
+        }
+        if (flag) {
+            server->sendData("UPDATE users SET login = '" + login
+                             + "', name = '" + name
+                             + "', surname = '" + surname
+                             + "', status = '" + status
+                             + "' WHERE id = " + QString::number(u.id) + ";");
+            refreshProfile();
+            ui->ProfileSuccessLabel->setText("Applied!");
+        }
     }
 }
 
