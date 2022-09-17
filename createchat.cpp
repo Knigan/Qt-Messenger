@@ -36,7 +36,7 @@ void CreateChat::clickCreateChatButton() {
             ui->ErrorLabel->setText("Chat name cannot contain a ':' character");
         }
         else {
-            int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chats;")).toInt();
+            int count = TCPServer::correct(server->sendData("SELECT MAX(id) FROM chats;")).toInt();
             QString str = TCPServer::correct(server->sendData("SELECT MAX(chat_id) FROM chats;"));
             int chat_count;
             if (str == "None") {

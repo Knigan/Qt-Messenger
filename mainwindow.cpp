@@ -214,7 +214,7 @@ void MainWindow::clickChatsSendButton() {
     }
     QString data = ui->ChatsTextEdit->toPlainText();
     if (data.length() != 0) {
-        int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chatcontent;")).toInt();
+        int count = TCPServer::correct(server->sendData("SELECT MAX(id) FROM chatcontent;")).toInt();
         if (data.contains('\n')) {
             for (int i = 0; i <= data.count('\n'); ++i) {
                 server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + i + 1) + ", " + QString::number(chat_id) + ", '" + u.surname + " " + u.name

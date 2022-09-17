@@ -55,20 +55,25 @@ void ConfigureChat::clickSendInviteButton() {
         ui->SuccessLabel->setText("This user is already in this chat");
     }
     else {
-        int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chats;")).toInt();
-        server->sendData("INSERT INTO chats VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", '" + name
-                         + "', " + QString::number(user_id) + ");");
-        ui->SuccessLabel->setText("Invite was sent successfully!");
+        QString check_contact = TCPServer::correct(server->sendData("SELECT id FROM contacts WHERE user_id = " + QString::number(user_id) + " AND contact_id = " + QString::number(id) + ";"));
+        if (check_contact == "The request was completed successfully") {
+            ui->SuccessLabel->setText("You must be a contact of this person to add him in a chat");
+        }
+        else {
+            int count = TCPServer::correct(server->sendData("SELECT MAX(id) FROM chats;")).toInt();
+            server->sendData("INSERT INTO chats VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", '" + name
+                             + "', " + QString::number(user_id) + ");");
+            ui->SuccessLabel->setText("Invite was sent successfully!");
 
-        count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chatcontent;")).toInt();
+            count = TCPServer::correct(server->sendData("SELECT MAX(id) FROM chatcontent;")).toInt();
 
-        QString data = server->sendData("SELECT surname, name FROM users WHERE id = " + QString::number(user_id));
-        QString Surname = TCPServer::correct(data.section(',', 0, 0));
-        QString Name = TCPServer::correct(data.section(',', 1, 1));
+            QString data = server->sendData("SELECT surname, name FROM users WHERE id = " + QString::number(user_id));
+            QString Surname = TCPServer::correct(data.section(',', 0, 0));
+            QString Name = TCPServer::correct(data.section(',', 1, 1));
 
-        server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", 'System " + "(" +
-                         QDateTime::currentDateTime().toString("dd.MM.yy HH:mm:ss") + "):[?~?]" + Surname + " " + Name + " joined this chat!');");
-
+            server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", 'System " + "(" +
+                             QDateTime::currentDateTime().toString("dd.MM.yy HH:mm:ss") + "):[?~?]" + Surname + " " + Name + " joined this chat!');");
+        }
     }
 }
 
@@ -86,7 +91,7 @@ void ConfigureChat::clickRenameChatButton() {
         else {
             server->sendData("UPDATE chats SET name = '" + new_name + " : " + QString::number(chat_id) + "' WHERE chat_id = " + QString::number(chat_id) + ";");
 
-            int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chatcontent;")).toInt();
+            int count = TCPServer::correct(server->sendData("SELECT MAX(id) FROM chatcontent;")).toInt();
 
             server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", 'System " + "(" +
                              QDateTime::currentDateTime().toString("dd.MM.yy HH:mm:ss") + "):[?~?]" + surname + " " + name + " renamed this chat (" + old_name + " -> " + new_name + ")');");
@@ -106,7 +111,7 @@ void ConfigureChat::clickDeleteChatButton() {
         server->sendData("DELETE FROM chatcontent WHERE chat_id = " + QString::number(chat_id) + ";");
     }
     else {
-        int count = TCPServer::correct(server->sendData("SELECT COUNT(*) FROM chatcontent;")).toInt();
+        int count = TCPServer::correct(server->sendData("SELECT MAX(id) FROM chatcontent;")).toInt();
 
         server->sendData("INSERT INTO chatcontent VALUES (" + QString::number(count + 1) + ", " + QString::number(chat_id) + ", 'System " + "(" +
                          QDateTime::currentDateTime().toString("dd.MM.yy HH:mm:ss") + "):[?~?]" + surname + " " + name + " left from this chat');");
