@@ -21,7 +21,7 @@
        <string/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Profile">
        <property name="accessibleName">
@@ -102,7 +102,7 @@
         <item row="4" column="0" rowspan="2" colspan="4">
          <widget class="QLabel" name="TipLabel">
           <property name="text">
-           <string>Restricted characters: comma, round brakets, quotation marks</string>
+           <string>Restricted characters: comma, round brackets, quotation marks</string>
           </property>
          </widget>
         </item>
@@ -150,7 +150,7 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="3">
+        <item row="1" column="0">
          <widget class="QPushButton" name="ChatsSendButton">
           <property name="text">
            <string>-&gt;</string>
