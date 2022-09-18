@@ -42,10 +42,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->ChatsListWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(clickedChat(const QModelIndex&)));
     connect(ui->RefreshChatButton, &QPushButton::clicked, this, &MainWindow::clickRefreshChatButton);
 
+    scroll = true;
+    ui->RefreshChatButton->setText("Scrolling is not enabled");
+
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [this]() {
         if (chat_id != 0) {
-            refreshChat(chat_id, false);
+            refreshChat(chat_id, scroll);
         }
     });
     timer->start(1000);
@@ -294,8 +297,12 @@ void MainWindow::clickChatsConfigureChatButton() {
 }
 
 void MainWindow::clickRefreshChatButton() {
-    if (chat_id == 0)
-        refreshChatsList();
-    else
-        refreshChat(chat_id, true);
+    if (scroll) {
+        scroll = false;
+        ui->RefreshChatButton->setText("Scrolling is enabled");
+    }
+    else {
+        scroll = true;
+        ui->RefreshChatButton->setText("Scrolling is not enabled");
+    }
 }

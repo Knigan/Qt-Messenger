@@ -51,6 +51,7 @@ private:
     TCPServer* server;
     int chat_id;
     QTimer* timer;
+    bool scroll;
 
     struct User {
         int id;

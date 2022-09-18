@@ -141,15 +141,6 @@
           </property>
          </widget>
         </item>
-        <item row="6" column="0" colspan="3">
-         <widget class="QSplitter" name="splitter_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <widget class="QListWidget" name="ChatsListWidget"/>
-          <widget class="QTextEdit" name="ChatsTextEdit"/>
-         </widget>
-        </item>
         <item row="6" column="3">
          <widget class="QPushButton" name="ChatsSendButton">
           <property name="text">
@@ -157,11 +148,20 @@
           </property>
          </widget>
         </item>
-        <item row="7" column="0" colspan="2">
+        <item row="7" column="0" colspan="3">
          <widget class="QPushButton" name="RefreshChatButton">
           <property name="text">
-           <string>Scroll down</string>
+           <string/>
           </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="2">
+         <widget class="QSplitter" name="splitter_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <widget class="QListWidget" name="ChatsListWidget"/>
+          <widget class="QTextEdit" name="ChatsTextEdit"/>
          </widget>
         </item>
        </layout>
