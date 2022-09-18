@@ -236,7 +236,7 @@ void MainWindow::on_actionRefresh_triggered() {
     if (chat_id == 0)
         refreshChatsList();
     else
-        refreshChat(chat_id, true);
+        refreshChat(chat_id, scroll);
 }
 
 void MainWindow::clickedContact(const QModelIndex& index) {
@@ -305,4 +305,9 @@ void MainWindow::clickRefreshChatButton() {
         scroll = true;
         ui->RefreshChatButton->setText("Scrolling is not enabled");
     }
+
+    if (chat_id == 0)
+        refreshChatsList();
+    else
+        refreshChat(chat_id, scroll);
 }
