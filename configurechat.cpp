@@ -19,7 +19,7 @@ ConfigureChat::ConfigureChat(int ID, QString Surname, QString Name, QWidget *par
 
     connect(ui->SendInviteButton, &QPushButton::clicked, this, &ConfigureChat::clickSendInviteButton);
     connect(ui->RenameChatButton, &QPushButton::clicked, this, &ConfigureChat::clickRenameChatButton);
-    connect(ui->DeleteChatButton, &QPushButton::clicked, this, &ConfigureChat::clickDeleteChatButton);
+    connect(ui->LeaveChatButton, &QPushButton::clicked, this, &ConfigureChat::clickLeaveChatButton);
     connect(ui->CancelButton, &QPushButton::clicked, this, &ConfigureChat::clickCancelButton);
 
     refreshChatsList();
@@ -102,7 +102,7 @@ void ConfigureChat::clickRenameChatButton() {
     }
 }
 
-void ConfigureChat::clickDeleteChatButton() {
+void ConfigureChat::clickLeaveChatButton() {
     int chat_id = TCPServer::correct(ui->ChatComboBox->currentText().section(':', 1, 1)).toInt();
     server->sendData("DELETE FROM chats WHERE chat_id = " + QString::number(chat_id) + " AND user_id = " + QString::number(id) + ";");
 

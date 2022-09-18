@@ -31,13 +31,6 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QPushButton" name="DeleteChatButton">
-     <property name="text">
-      <string>Delete chat</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0" colspan="2">
     <widget class="QLabel" name="SendInviteLabel">
      <property name="text">
@@ -73,6 +66,13 @@
     <widget class="QLabel" name="SuccessLabel">
      <property name="text">
       <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QPushButton" name="LeaveChatButton">
+     <property name="text">
+      <string>Leave the chat</string>
      </property>
     </widget>
    </item>

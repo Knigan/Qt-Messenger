@@ -231,7 +231,7 @@ void MainWindow::on_actionRefresh_triggered() {
 }
 
 void MainWindow::clickedContact(const QModelIndex& index) {
-    QString status = TCPServer::correct(server->sendData("SELECT status FROM users WHERE login = '" + index.data().toString() + "';"));
+    QString status = server->sendData("SELECT status FROM users WHERE login = '" + index.data().toString() + "';").section("'", 1, 1);
     if (status != "The request was completed successfully") {
         ui->ContactsTextEdit->setText(status);
     }

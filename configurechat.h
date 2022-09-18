@@ -21,7 +21,7 @@ public:
 private slots:
     void clickSendInviteButton();
     void clickRenameChatButton();
-    void clickDeleteChatButton();
+    void clickLeaveChatButton();
     void clickCancelButton();
 
 private:
