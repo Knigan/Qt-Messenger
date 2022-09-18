@@ -40,11 +40,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->ChatsCreateChatButton, &QPushButton::clicked, this, &MainWindow::clickChatsCreateChatButton);
     connect(ui->ChatsConfigureChatButton, &QPushButton::clicked, this, &MainWindow::clickChatsConfigureChatButton);
     connect(ui->ChatsListWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(clickedChat(const QModelIndex&)));
+    connect(ui->RefreshChatButton, &QPushButton::clicked, this, &MainWindow::clickRefreshChatButton);
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [this]() {
         if (chat_id != 0) {
-            refreshChat(chat_id);
+            refreshChat(chat_id, false);
         }
     });
     timer->start(1000);
@@ -119,7 +120,7 @@ void MainWindow::refreshChatsList() {
     ui->ChatsSuccessLabel->clear();
 }
 
-void MainWindow::refreshChat(int chatID) {
+void MainWindow::refreshChat(int chatID, bool flag) {
     ui->ChatsListWidget->clear();
     chat_id = chatID;
 
@@ -138,7 +139,9 @@ void MainWindow::refreshChat(int chatID) {
         }
         QListWidgetItem* item = new QListWidgetItem(str);
         ui->ChatsListWidget->addItem(item);
-        ui->ChatsListWidget->scrollToItem(item);
+        if (flag) {
+            ui->ChatsListWidget->scrollToItem(item);
+        }
     }
 }
 
@@ -227,7 +230,10 @@ void MainWindow::on_actionReconnect_triggered() {
 void MainWindow::on_actionRefresh_triggered() {
     refreshProfile();
     refreshContacts();
-    refreshChatsList();
+    if (chat_id == 0)
+        refreshChatsList();
+    else
+        refreshChat(chat_id, true);
 }
 
 void MainWindow::clickedContact(const QModelIndex& index) {
@@ -242,6 +248,7 @@ void MainWindow::clickedContact(const QModelIndex& index) {
 
 void MainWindow::clickChatsSendButton() {
     if (chat_id == 0) {
+        refreshChatsList();
         return;
     }
     QString data = ui->ChatsTextEdit->toPlainText();
@@ -261,7 +268,7 @@ void MainWindow::clickChatsSendButton() {
 
         ui->ChatsTextEdit->clear();
     }
-    refreshChat(chat_id);
+    refreshChat(chat_id, true);
 }
 
 void MainWindow::clickChatsCreateChatButton() {
@@ -276,7 +283,7 @@ void MainWindow::clickChatsCreateChatButton() {
 void MainWindow::clickedChat(const QModelIndex& index) {
     if (chat_id == 0) {
         int chatID = TCPServer::correct(index.data().toString().section(':', 1, 1)).toInt();
-        refreshChat(chatID);
+        refreshChat(chatID, true);
     }
 }
 
@@ -284,4 +291,11 @@ void MainWindow::clickChatsConfigureChatButton() {
     ConfigureChat c(u.id, u.surname, u.name, this, server);
     c.exec();
     refreshChatsList();
+}
+
+void MainWindow::clickRefreshChatButton() {
+    if (chat_id == 0)
+        refreshChatsList();
+    else
+        refreshChat(chat_id, true);
 }

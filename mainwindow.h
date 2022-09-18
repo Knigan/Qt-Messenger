@@ -26,7 +26,7 @@ public:
     void refreshProfile();
     void refreshContacts();
     void refreshChatsList();
-    void refreshChat(int chat_id);
+    void refreshChat(int chat_id, bool flag = true);
 
 private slots:
     void clickProfileApplyButton();
@@ -44,6 +44,7 @@ private slots:
     void clickChatsCreateChatButton();
     void clickChatsConfigureChatButton();
     void clickedChat(const QModelIndex&);
+    void clickRefreshChatButton();
 
 private:
     Ui::MainWindow *ui;
