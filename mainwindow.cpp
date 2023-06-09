@@ -14,11 +14,6 @@ MainWindow::MainWindow(QWidget *parent)
     server->sendData("CREATE TABLE IF NOT EXISTS chats (id INTEGER NOT NULL PRIMARY KEY, chat_id INTEGER NOT NULL, name text, user_id INTEGER NOT NULL);");
     server->sendData("CREATE TABLE IF NOT EXISTS chatcontent (id INTEGER NOT NULL PRIMARY KEY, chat_id INTEGER NOT NULL, message text);");
 
-    server->sendData("CREATE INDEX IF NOT EXISTS users_index ON users(id);");
-    server->sendData("CREATE INDEX IF NOT EXISTS contacts_index ON contacts(user_id);");
-    server->sendData("CREATE INDEX IF NOT EXISTS chats_index ON chats(chat_id);");
-    server->sendData("CREATE INDEX IF NOT EXISTS chatcontent_index ON chatcontent(chat_id);");
-
     Connection d(this, server);
     d.exec();
     u.id = d.getId();
